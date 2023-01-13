@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 
+const square_number = 3;
+
 function Square(props) {
   return (
     <button className="square" onClick={props.onClick}>
@@ -14,6 +16,7 @@ class Board extends React.Component {
   renderSquare(i) {
     return (
       <Square
+        key={i}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
@@ -21,23 +24,21 @@ class Board extends React.Component {
   }
 
   render() {
+    let bordRowList = Array.from({ length: square_number }, (_, i) => i).map((i) => {
+      return (
+        <div
+          key={i}
+          className="board-row"
+        >
+          {Array.from({ length: square_number }, (_, j) => j).map((j) => {
+            return this.renderSquare(i + j + (square_number - 1) * i);
+          })}
+        </div>
+      );
+    });
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {bordRowList}
       </div>
     );
   }
@@ -155,9 +156,8 @@ function calculatoColRow(history, move) {
       return element != history[move - 1].squares[i]
     });
   }
-  const number = 3
-  const mapping = [...Array(number)].map((_, i) => {
-    return [...Array(number)].map((_, j) => [i + 1, j + 1])
+  const mapping = [...Array(square_number)].map((_, i) => {
+    return [...Array(square_number)].map((_, j) => [i + 1, j + 1])
   }).flat();
   return mapping[putIndex];
 }
