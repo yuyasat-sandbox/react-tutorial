@@ -119,7 +119,9 @@ class Game extends React.Component {
     }
 
     let status;
-    if (winner) {
+    if (winner === 'draw') {
+      status = `Draw`
+    } else if (winner) {
       status = `Winner: ${winner}`
     } else {
       status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
@@ -150,7 +152,7 @@ class Game extends React.Component {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Game />);
 
-function calculatorWinner(squires) {
+function calculatorWinner(squares) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -163,11 +165,15 @@ function calculatorWinner(squires) {
   ]
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
-    if (squires[a] && squires[a] === squires[b] && squires[a] === squires[c]) {
-      return [squires[a], lines[i]];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return [squares[a], lines[i]];
     }
   }
-  return [null, []];
+  let draw = null;
+  if (!squares.some((ele) => ele === null)) {
+    draw = 'draw'
+  }
+  return [draw, []];
 }
 
 function calculatoColRow(history, move) {
